@@ -1,0 +1,79 @@
+# =============================================================================
+# Segredos e configuração local (NUNCA commitar)
+# =============================================================================
+Config/settings.json
+Config/settings.local.json
+Config/*.token
+Config/*.key
+.env
+.env.*
+!.env.example
+
+# =============================================================================
+# Estado de runtime do bot/monitores
+# =============================================================================
+Config/debug.log
+Config/access.log
+Config/fet_log.txt
+Config/*.out.txt
+Config/*.err.txt
+Config/telegram_offset.txt
+Config/telegram_listener.lock
+Config/monitor_status.json
+Config/monitor_control.json
+Config/fet_status.json
+Config/fet_control.json
+Config/fet_ocr_last.txt
+
+# =============================================================================
+# Saídas geradas (mantém as pastas via .gitkeep, ignora todo o resto)
+# =============================================================================
+Screenshots/*
+!Screenshots/.gitkeep
+!Screenshots/FET/
+Screenshots/FET/*
+!Screenshots/FET/.gitkeep
+
+# =============================================================================
+# Artefatos do PyInstaller
+# =============================================================================
+InstallerPackage/build/
+InstallerPackage/dist/
+*.spec.bak
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# =============================================================================
+# IDEs / ferramentas locais
+# =============================================================================
+.claude/settings.local.json
+.vscode/
+.idea/
+*.swp
+*.swo
+Thumbs.db
+desktop.ini
+
+# =============================================================================
+# Transcripts e arquivos de sessão
+# =============================================================================
+*-caveat-the-messages-*.txt
+*.transcript.txt
+
+# =============================================================================
+# Lixo do Windows (nome reservado criado por engano de redirecionamento)
+# =============================================================================
+nul
+
+# =============================================================================
+# Scripts pessoais/legados de manutenção (não publicáveis)
+# =============================================================================
+tools/legacy/
+
+# =============================================================================
+# Notas internas de processo (specs/plans de auditoria, podem conter PII histórica)
+# =============================================================================
+docs/superpowers/
+

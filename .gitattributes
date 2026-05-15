@@ -1,0 +1,17 @@
+# Normaliza line endings entre Windows/Linux/macOS.
+# Detecção automática para arquivos de texto.
+* text=auto eol=lf
+
+# Scripts Windows mantêm CRLF (cmd.exe/PowerShell preferem)
+*.bat        text eol=crlf
+*.cmd        text eol=crlf
+*.ps1        text eol=crlf
+*.psm1       text eol=crlf
+*.psd1       text eol=crlf
+
+# Binários (sem normalização)
+*.png        binary
+*.jpg        binary
+*.jpeg       binary
+*.exe        binary
+*.dll        binary

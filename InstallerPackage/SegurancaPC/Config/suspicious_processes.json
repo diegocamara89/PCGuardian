@@ -1,0 +1,23 @@
+{
+  "suspicious_processes": [
+    "wireshark",
+    "cheatengine",
+    "processhacker",
+    "procexp",
+    "procexp64",
+    "nmap",
+    "metasploit",
+    "mimikatz",
+    "psexec",
+    "keylogger"
+  ],
+  "high_priority": [
+    "cheatengine",
+    "mimikatz",
+    "keylogger",
+    "metasploit"
+  ],
+  "monitoring_enabled": true,
+  "alert_on_high_priority": true,
+  "auto_block_on_detect": false
+}

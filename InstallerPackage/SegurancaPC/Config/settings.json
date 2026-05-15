@@ -1,0 +1,12 @@
+﻿{
+    "BotToken":  "__BOT_TOKEN__",
+    "UserId":  "__USER_ID__",
+    "PCName":  "__PC_NAME__",
+    "InactivityMin":  5,
+    "WarningMin":  1,
+    "ScreenshotOnBlock":  true,
+    "USBMonitoring":  true,
+    "ProcessMonitoring":  false,
+    "AutoBlockOnUSB":  false
+} 
+

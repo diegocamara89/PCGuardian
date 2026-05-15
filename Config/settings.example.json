@@ -1,0 +1,12 @@
+{
+  "BotToken": "SEU_TOKEN_DO_BOTFATHER_AQUI",
+  "UserId": "SEU_USER_ID_NUMERICO_AQUI",
+  "PCName": "MEU-PC",
+  "InactivityMin": 5,
+  "WarningMin": 1,
+  "ScreenshotOnBlock": true,
+  "USBMonitoring": true,
+  "ProcessMonitoring": false,
+  "AutoBlockOnUSB": false,
+  "FetCheckIntervalSeconds": 300
+}
