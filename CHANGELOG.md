@@ -15,6 +15,8 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 - `.gitignore` cobrindo segredos, runtime, screenshots, artefatos de build e `tools/legacy/`.
 
 ### Corrigido
+- `installer_main.py`: `update_settings()` agora lê `settings.json` do bundle com `utf-8-sig`, tolerando templates salvos com BOM. Bug real encontrado durante validação end-to-end do `.exe` (`json.decoder.JSONDecodeError: Unexpected UTF-8 BOM`).
+- `InstallerPackage/SegurancaPC/Config/settings.json` e `Config/settings.example.json`: re-salvos sem BOM (UTF-8 puro).
 - `Scripts/*`: paths absolutos (`C:\SegurancaPC\...`) substituídos por `Get-VigiaPaths`/`$PSScriptRoot` — sistema agora roda de qualquer diretório.
 - `MonitorInatividade.ps1`: 14 referências órfãs a `$configDir\debug.log` corrigidas durante o refactor para `$debugLog`.
 - `installer_main.py`: trocados token e User ID reais que apareciam no help interativo por valores sintéticos.

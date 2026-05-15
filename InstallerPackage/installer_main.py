@@ -99,7 +99,8 @@ def update_settings(config_dir: Path, pc_name: str, bot_token: str, user_id: str
     settings_path = config_dir / "settings.json"
     if not settings_path.exists():
         raise SystemExit(f"Arquivo de configuracoes nao encontrado em {settings_path}.")
-    with settings_path.open("r", encoding="utf-8") as fh:
+    # utf-8-sig tolera template salvo com BOM (problema real visto em build anterior)
+    with settings_path.open("r", encoding="utf-8-sig") as fh:
         data = json.load(fh)
     data["PCName"] = pc_name
     data["BotToken"] = bot_token
