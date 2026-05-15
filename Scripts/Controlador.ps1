@@ -1,6 +1,7 @@
 # Controlador.ps1 - Interface CLI interativa local para SegurancaPC
 # Permite administrar o sistema sem depender do Telegram.
-# Uso: powershell.exe -ExecutionPolicy Bypass -File "C:\SegurancaPC\Scripts\Controlador.ps1"
+# Uso: clique duplo em controlador.bat, ou rode no PowerShell:
+#   powershell.exe -ExecutionPolicy Bypass -File "$PSScriptRoot\Controlador.ps1"
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $ErrorActionPreference = 'Stop'

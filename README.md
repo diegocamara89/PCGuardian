@@ -15,6 +15,21 @@
 
 ---
 
+## ⚡ Quick start (TL;DR)
+
+Para quem tem pressa — instalação completa em ~5 min:
+
+1. **Crie um bot no Telegram:** abra [@BotFather](https://t.me/BotFather), envie `/newbot`, escolha nome e username (deve terminar em `bot`). Anote o **token**.
+2. **Descubra seu User ID:** abra [@userinfobot](https://t.me/userinfobot) e envie qualquer mensagem. Anote o **número** que ele responde.
+3. **Baixe** `SegurancaPC_Installer.exe` na [aba Releases](https://github.com/diegocamara89/PCGuardian/releases).
+4. **Execute como Administrador** (botão direito → "Executar como administrador"). Se o Windows mostrar "SmartScreen protegeu seu PC", clique em **Mais informações → Executar mesmo assim** (ver [seção dedicada](#se-o-windows-bloquear-o-instalador)).
+5. **Responda às perguntas** do instalador (token, user id, nome do PC).
+6. **Teste:** envie `/help` ao seu bot. Você deve receber o menu de comandos.
+
+Pronto. Detalhes nas seções abaixo.
+
+---
+
 ## ⚠️ Aviso de uso responsável
 
 Este software permite **bloquear remotamente um PC, capturar a tela, ser
@@ -54,9 +69,42 @@ local** (`Scripts/Controlador.ps1`) está disponível para administrar offline.
 - **OCR UWP** (opcional, só para o `MonitorFET`): pacote de idioma português
   instalado pelo Windows (`Configurações → Hora e idioma → Idioma → Português → Opções → Reconhecimento de fala/OCR`).
 - **Python 3.10+** (apenas se você for **rebuildar** o instalador).
-- **Bot do Telegram:** crie um pelo [@BotFather](https://t.me/BotFather) e
-  obtenha o token. Descubra seu `UserId` numérico falando com
-  [@userinfobot](https://t.me/userinfobot).
+- **Bot do Telegram:** veja a seção [Criando o bot no Telegram](#criando-o-bot-no-telegram) abaixo.
+
+---
+
+## Criando o bot no Telegram
+
+Você precisa de duas coisas antes de instalar: o **token do bot** e o seu **User ID numérico**.
+
+### Passo 1 — Criar o bot
+
+1. Abra o Telegram e procure por **[@BotFather](https://t.me/BotFather)** (é o bot oficial para criar bots).
+2. Envie `/start` e depois `/newbot`.
+3. O BotFather pergunta o **nome** do bot (qualquer texto, ex.: "Vigia do PC do Joãozinho").
+4. Pergunta o **username** — deve ser único no Telegram e **terminar em `bot`** (ex.: `vigia_joaozinho_bot`).
+5. Resposta final inclui uma linha tipo:
+   ```
+   Use this token to access the HTTP API:
+   1234567890:AAHwEXemploTokenSinteticoNaoUtilizavel0123
+   ```
+   Esse é o seu **token**. Guarde — ele é segredo (quem tem o token controla o bot).
+
+### Passo 2 — Descobrir seu User ID
+
+1. Procure por **[@userinfobot](https://t.me/userinfobot)** no Telegram.
+2. Envie `/start`.
+3. Ele responde com seus dados, incluindo:
+   ```
+   Id: 1697670772
+   ```
+   Esse número é o seu **User ID**. Só você (com esse ID) poderá controlar o bot.
+
+### Passo 3 — Iniciar conversa com o seu novo bot
+
+Antes do bot conseguir te mandar mensagens, **você precisa enviar `/start` para o seu próprio bot** pelo menos uma vez. Sem isso, o Telegram bloqueia mensagens automáticas.
+
+Pronto — você tem o token e o User ID. Use no instalador.
 
 ---
 
@@ -80,7 +128,7 @@ local** (`Scripts/Controlador.ps1`) está disponível para administrar offline.
 
 ```powershell
 # 1. Clonar
-git clone https://github.com/<seu-usuario>/vigiapc.git C:\SegurancaPC
+git clone https://github.com/diegocamara89/PCGuardian.git C:\SegurancaPC
 cd C:\SegurancaPC
 
 # 2. Copiar template de configuração e preencher
@@ -103,6 +151,104 @@ pip install pyinstaller
 pyinstaller SegurancaPC_Installer.spec
 # saída: dist\SegurancaPC_Installer.exe
 ```
+
+---
+
+## Se o Windows bloquear o instalador
+
+O `SegurancaPC_Installer.exe` é gerado pelo PyInstaller e **não tem certificado
+de assinatura de código** (assinatura custa centenas de dólares por ano).
+Isso é normal em software open source e leva o Windows e alguns antivírus a
+exibir alertas. Não é vírus — você pode verificar tudo lendo o código-fonte
+neste repositório.
+
+### "O Windows protegeu seu PC" (SmartScreen)
+
+Ao executar o `.exe`, você vai ver uma tela azul:
+
+> Windows protegeu seu PC
+> O Microsoft Defender SmartScreen impediu a inicialização de um aplicativo
+> não reconhecido.
+
+**Como prosseguir:**
+
+1. Clique em **"Mais informações"** (texto pequeno).
+2. Aparece um botão **"Executar mesmo assim"** — clique nele.
+3. Em seguida o UAC vai pedir confirmação de Administrador — confirme.
+
+### Antivírus marcou como "trojan" ou "PUA"
+
+Falso positivo comum com binários PyInstaller. Caminhos:
+
+- **Windows Defender:** abra "Segurança do Windows" → "Proteção contra vírus e ameaças" → "Histórico de proteção" → encontre o item → "Permitir".
+- **Outros antivírus:** adicione `C:\SegurancaPC\` à lista de exclusões.
+
+Se você não confia no `.exe`, use a **Opção B (instalação manual)** acima —
+ela só usa PowerShell, sem binário compilado.
+
+---
+
+## Verificando a instalação
+
+Após o instalador terminar (ou rodar `iniciar_sistema.bat`), confirme passo a passo:
+
+### 1. Os processos estão rodando
+
+```powershell
+Get-CimInstance Win32_Process | Where-Object {
+  $_.CommandLine -match 'SegurancaPC\\Scripts\\(TelegramListener|MonitorInatividade|MonitorFET)\.ps1'
+} | Select-Object ProcessId, @{N='Script';E={if($_.CommandLine -match '\\([^\\]+\.ps1)'){$Matches[1]}}}
+```
+
+Você deve ver **3 linhas** — uma para cada script. Se aparecer 0, abra um
+terminal PowerShell **como Administrador** e rode `C:\SegurancaPC\iniciar_sistema.bat`.
+
+### 2. O bot responde
+
+No Telegram, com sua conta autorizada, envie `/help` para o seu bot. Resposta esperada (resumida):
+
+```
+PC SECURITY v6.6 + FET MONITOR
+Sistema: <PCName>
+
+COMANDOS DISPONIVEIS:
+/help - Exibir este menu
+/bloquear - Bloquear PC + mute
+...
+```
+
+Se não chegar resposta em ~10s:
+
+- **Você enviou `/start` ao seu próprio bot pelo menos uma vez?** (passo 3 acima)
+- **O `UserId` em `Config/settings.json` bate com o seu real?** (use `@userinfobot` de novo)
+- **O `BotToken` está correto?** Verifique no `@BotFather` → `/mybots`.
+
+### 3. Status em tempo real
+
+Envie `/status` ao bot. Resposta esperada:
+
+```
+STATUS DO SISTEMA
+PC: <PCName>
+Status: active
+Ultima atividade: <horario>
+Tempo inativo: 0 min
+Monitoramento: True
+```
+
+### 4. Controlador CLI local (sem Telegram)
+
+Em qualquer momento, rode `controlador.bat` na pasta de instalação. Aparece
+um menu numérico com 15 ações (status, screenshot, mute, pausar, etc.). Útil
+para diagnóstico quando o Telegram não está disponível.
+
+### 5. Verificar tarefa agendada
+
+```powershell
+schtasks /Query /TN SegurancaPC_AutoStart /V /FO LIST
+```
+
+Deve mostrar "Estado: Pronto" e "Logon Type: Interactive Token".
 
 ---
 
